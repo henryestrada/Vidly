@@ -1,0 +1,32 @@
+﻿@model List<Customer>
+
+@{
+    ViewBag.Title = "Customers";
+}
+
+<h2>Customers</h2>
+
+<br />
+
+@if (Model.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td><a href="Customers/Details/@customer.Id">@customer.FullName</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <text>We don't have any customers yet</text>
+}
