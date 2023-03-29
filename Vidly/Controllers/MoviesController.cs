@@ -1,34 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vidly.Models;
+using Vidly.Repositories;
 
 namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly List<Movie> _movies = new List<Movie>
-        {
-            new Movie
-            {
-                Id = 1,
-                Name = "Shrek"
-            },
+        private readonly IMovieRepository _movieRepository;
 
-            new Movie
-            {
-                Id = 2,
-                Name = "Wall-E"
-            }
-        };
-
-        public IActionResult Index()
+        public MoviesController(IMovieRepository movieRepository)
         {
-            return View("Movies", _movies);
+            _movieRepository = movieRepository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var movies = await _movieRepository.GetAllAsync();
+            return View("Movies", movies);
         }
 
         [Route("Movies/Details/{id:int}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var customer = _movies.Single(x => x.Id == id);
+            var customer = await _movieRepository.GetAsync(id);
 
             return View("Details", customer);
         }

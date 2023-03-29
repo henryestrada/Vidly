@@ -14,6 +14,8 @@ public class VidlyDbContext : IdentityDbContext
 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<MembershipType> MembershipTypes { get; set; }
+    public DbSet<Movie> Movies { get; set; }
+    public DbSet<Genre> Genres { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -22,6 +24,11 @@ public class VidlyDbContext : IdentityDbContext
             .HasOne(c => c.MembershipType)
             .WithMany()
             .HasForeignKey(c => c.MembershipTypeId);
+
+        builder.Entity<Movie>()
+            .HasOne(c => c.Genre)
+            .WithMany()
+            .HasForeignKey(c => c.GenreId);
 
         base.OnModelCreating(builder);
     }
