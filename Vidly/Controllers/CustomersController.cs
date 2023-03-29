@@ -1,36 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vidly.Models;
+using Vidly.Repositories;
 
 namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly List<Customer> _customers = new List<Customer>
-        {
-            new Customer
-            {
-                Id = 1,
-                FirstName = "John",
-                LastName = "Smith"
-            },
+        private readonly ICustomerRepository _customerRepository;
 
-            new Customer
-            {
-                Id = 2,
-                FirstName = "Mary",
-                LastName = "Williams"
-            }
-        };
-
-        public IActionResult Index()
+        public CustomersController(ICustomerRepository customerRepository)
         {
-            return View("Customers", _customers);
+            _customerRepository = customerRepository;
+        }
+
+        public async Task<ViewResult> Index()
+        {
+            var customers = await _customerRepository.GetAllAsync();
+
+            return View("Customers", customers);
         }
 
         [Route("Customers/Details/{id:int}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var customer = _customers.Single(x => x.Id == id);
+            var customer = await _customerRepository.GetAsync(id);
+
+            if (customer == null) return NotFound();
 
             return View("Details", customer);
         }
