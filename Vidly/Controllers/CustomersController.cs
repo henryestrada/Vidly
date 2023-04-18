@@ -25,17 +25,38 @@ namespace Vidly.Controllers
         public async Task<ViewResult> New()
         {
             var membershipTypes = await _membershipTypeRepository.GetAllAsync();
-            var viewModel = new NewCustomerViewModel { MembershipTypes = membershipTypes };
+            var viewModel = new CustomerFormViewModel { MembershipTypes = membershipTypes };
 
-            return View(viewModel);
+            return View("CustomerForm", viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(NewCustomerViewModel viewModel)
+        public async Task<IActionResult> Save(CustomerFormViewModel viewModel)
         {
-            await _customerRepository.AddAsync(viewModel.Customer);
+            var customer = viewModel.Customer;
+            if (customer.Id == 0)
+                await _customerRepository.AddAsync(viewModel.Customer);
+            else
+            {
+                await _customerRepository.UpdateAsync(viewModel.Customer);
+            }
 
             return RedirectToAction("Index", "Customers");
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var customer = await _customerRepository.GetAsync(id);
+
+            if (customer == null) return NotFound();
+
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipTypes = await _membershipTypeRepository.GetAllAsync()
+            };
+
+            return View("CustomerForm", viewModel);
         }
 
         [Route("Customers/Details/{id:int}")]

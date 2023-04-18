@@ -21,9 +21,17 @@ public class EFCustomerRepository : ICustomerRepository
         return customer;
     }
 
-    public Task<Customer> DeleteAsync(int id)
+    public async Task<Customer> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var customer = await _vidlyDbContext.Customers.SingleAsync(x => x.Id == id);
+
+        if (customer == null) return null;
+
+        _vidlyDbContext.Customers.Remove(customer);
+
+        await _vidlyDbContext.SaveChangesAsync();
+
+        return customer;
     }
 
     public async Task<IEnumerable<Customer>> GetAllAsync()
@@ -36,8 +44,18 @@ public class EFCustomerRepository : ICustomerRepository
         return await _vidlyDbContext.Customers.Include(c => c.MembershipType).FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task<Customer> UpdateAsync(Customer customer)
+    public async Task<Customer> UpdateAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        var existingCustomer = await _vidlyDbContext.Customers.SingleAsync(x => x.Id == customer.Id);
+
+        existingCustomer.FirstName = customer.FirstName;
+        existingCustomer.LastName = customer.LastName;
+        existingCustomer.Birthdate = customer.Birthdate;
+        existingCustomer.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+        existingCustomer.MembershipType = customer.MembershipType;
+
+        await _vidlyDbContext.SaveChangesAsync();
+
+        return existingCustomer;
     }
 }

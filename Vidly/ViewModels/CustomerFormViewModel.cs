@@ -4,7 +4,7 @@ using Vidly.Models;
 namespace Vidly.ViewModels;
 
 [DataContract]
-public class NewCustomerViewModel
+public class CustomerFormViewModel
 {
     [DataMember]
     public IEnumerable<MembershipType> MembershipTypes { get; set; }
