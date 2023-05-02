@@ -17,6 +17,7 @@ builder.Services.AddDbContext<VidlyDbContext>(options =>
 builder.Services.AddScoped<ICustomerRepository, EFCustomerRepository>();
 builder.Services.AddScoped<IMovieRepository, EFMovieRepository>();
 builder.Services.AddScoped<IMembershipTypeRepository, EFMembershipTypeRepository>();
+builder.Services.AddScoped<IGenreRepository, EFGenreRepository>();
 
 var app = builder.Build();
 

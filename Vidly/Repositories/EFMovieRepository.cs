@@ -12,14 +12,27 @@ public class EFMovieRepository : IMovieRepository
     {
         _vidlyDbContext = vidlyDbContext;
     }
-    public Task<Movie> AddAsync(Movie Movie)
+
+    public async Task<Movie> AddAsync(Movie movie)
     {
-        throw new NotImplementedException();
+        movie.Id = 0;
+        await _vidlyDbContext.AddAsync(movie);
+        await _vidlyDbContext.SaveChangesAsync();
+
+        return movie;
     }
 
-    public Task<Movie> DeleteAsync(int id)
+    public async Task<Movie> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var movie = await _vidlyDbContext.Movies.SingleAsync(x => x.Id == id);
+
+        if (movie == null) return null;
+
+        _vidlyDbContext.Movies.Remove(movie);
+
+        await _vidlyDbContext.SaveChangesAsync();
+
+        return movie;
     }
 
     public async Task<IEnumerable<Movie>> GetAllAsync()
@@ -32,8 +45,19 @@ public class EFMovieRepository : IMovieRepository
         return await _vidlyDbContext.Movies.Include(x => x.Genre).FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task<Movie> UpdateAsync(Movie Movie)
+    public async Task<Movie> UpdateAsync(Movie movie)
     {
-        throw new NotImplementedException();
+
+        var existingMovie = await _vidlyDbContext.Movies.SingleAsync(x => x.Id == movie.Id);
+
+        existingMovie.Name = movie.Name;
+        existingMovie.ReleaseDate = movie.ReleaseDate;
+        existingMovie.DateAdded = movie.DateAdded;
+        existingMovie.GenreId = movie.GenreId;
+        existingMovie.NumberInStock = movie.NumberInStock;
+
+        await _vidlyDbContext.SaveChangesAsync();
+
+        return existingMovie;
     }
 }

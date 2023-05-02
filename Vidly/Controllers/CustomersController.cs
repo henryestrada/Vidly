@@ -34,12 +34,11 @@ namespace Vidly.Controllers
         public async Task<IActionResult> Save(CustomerFormViewModel viewModel)
         {
             var customer = viewModel.Customer;
+
             if (customer.Id == 0)
                 await _customerRepository.AddAsync(viewModel.Customer);
             else
-            {
                 await _customerRepository.UpdateAsync(viewModel.Customer);
-            }
 
             return RedirectToAction("Index", "Customers");
         }
