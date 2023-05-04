@@ -1,67 +1,80 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Vidly.Infrastructure;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Vidly.Models;
 using Vidly.Repositories;
 using Vidly.ViewModels;
 
-namespace Vidly.Controllers
+namespace Vidly.Controllers;
+
+[ApiExplorerSettings(IgnoreApi = true)]
+public class MoviesController : Controller
 {
-    public class MoviesController : Controller
+    private readonly IMovieRepository _movieRepository;
+    private readonly IGenreRepository _genreRepository;
+    private readonly IMapper _mapper;
+
+    public MoviesController(IMovieRepository movieRepository, IGenreRepository genreRepository, IMapper mapper)
     {
-        private readonly IMovieRepository _movieRepository;
-        private readonly IGenreRepository _genreRepository;
+        _movieRepository = movieRepository;
+        _genreRepository = genreRepository;
+        _mapper = mapper;
+    }
 
-        public MoviesController(IMovieRepository movieRepository, IGenreRepository genreRepository)
+    public async Task<IActionResult> Index()
+    {
+        var movies = await _movieRepository.GetAllAsync();
+        return View("Movies", movies);
+    }
+
+    public async Task<ViewResult> New()
+    {
+        var genres = await _genreRepository.GetAllAsync();
+        var viewModel = new MovieFormViewModel { Genres = genres };
+
+        return View("MovieForm", viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Save(MovieFormViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
         {
-            _movieRepository = movieRepository;
-            _genreRepository = genreRepository;
+            var newViewModel = new MovieFormViewModel(viewModel)
+            {
+                Genres = await _genreRepository.GetAllAsync()
+            };
+
+            return View("MovieForm", newViewModel);
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var movies = await _movieRepository.GetAllAsync();
-            return View("Movies", movies);
-        }
+        var movie = _mapper.Map<Movie>(viewModel);
 
-        public async Task<ViewResult> New()
-        {
-            var genres = await _genreRepository.GetAllAsync();
-            var viewModel = new MovieFormViewModel { Genres = genres };
+        if (movie.Id == 0)
+            await _movieRepository.AddAsync(movie);
+        else
+            await _movieRepository.UpdateAsync(movie);
 
-            return View("MovieForm", viewModel);
-        }
+        return RedirectToAction("Index", "Movies");
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Save(MovieFormViewModel viewModel)
-        {
-            var movie = VidlyAutoMapper.Mapper.Map<Movie>(viewModel);
+    public async Task<IActionResult> Edit(int id)
+    {
+        var movie = await _movieRepository.GetAsync(id);
 
-            if (movie.Id == 0)
-                await _movieRepository.AddAsync(movie);
-            else
-                await _movieRepository.UpdateAsync(movie);
+        if (movie == null) return NotFound();
 
-            return RedirectToAction("Index", "Movies");
-        }
+        var viewModel = _mapper.Map<MovieFormViewModel>(movie);
+        viewModel.Genres = await _genreRepository.GetAllAsync();
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var movie = await _movieRepository.GetAsync(id);
+        return View("MovieForm", viewModel);
+    }
 
-            if (movie == null) return NotFound();
+    [Route("Movies/Details/{id:int}")]
+    public async Task<IActionResult> Details(int id)
+    {
+        var customer = await _movieRepository.GetAsync(id);
 
-            var viewModel = VidlyAutoMapper.Mapper.Map<MovieFormViewModel>(movie);
-            viewModel.Genres = await _genreRepository.GetAllAsync();
-
-            return View("MovieForm", viewModel);
-        }
-
-        [Route("Movies/Details/{id:int}")]
-        public async Task<IActionResult> Details(int id)
-        {
-            var customer = await _movieRepository.GetAsync(id);
-
-            return View("Details", customer);
-        }
+        return View("Details", customer);
     }
 }

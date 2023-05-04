@@ -23,7 +23,7 @@ public class EFCustomerRepository : ICustomerRepository
 
     public async Task<Customer> DeleteAsync(int id)
     {
-        var customer = await _vidlyDbContext.Customers.SingleAsync(x => x.Id == id);
+        var customer = await _vidlyDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
 
         if (customer == null) return null;
 
@@ -41,12 +41,14 @@ public class EFCustomerRepository : ICustomerRepository
 
     public async Task<Customer> GetAsync(int id)
     {
-        return await _vidlyDbContext.Customers.Include(c => c.MembershipType).FirstOrDefaultAsync(x => x.Id == id);
+        return await _vidlyDbContext.Customers.Include(c => c.MembershipType).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Customer> UpdateAsync(Customer customer)
+    public async Task<Customer> UpdateAsync(int id, Customer customer)
     {
-        var existingCustomer = await _vidlyDbContext.Customers.SingleAsync(x => x.Id == customer.Id);
+        var existingCustomer = await _vidlyDbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (existingCustomer == null) return null;
 
         existingCustomer.FirstName = customer.FirstName;
         existingCustomer.LastName = customer.LastName;

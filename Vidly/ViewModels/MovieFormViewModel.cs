@@ -7,8 +7,23 @@ namespace Vidly.ViewModels;
 [DataContract]
 public class MovieFormViewModel
 {
+    public MovieFormViewModel()
+    {
+        Id = 0;
+    }
+    public MovieFormViewModel(MovieFormViewModel other)
+    {
+        other ??= new MovieFormViewModel();
+
+        Id = other.Id;
+        Name = other.Name;
+        ReleaseDate = other.ReleaseDate;
+        NumberInStock = other.NumberInStock;
+        GenreId = other.GenreId;
+    }
+
     [DataMember]
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [DataMember]
     [Required]
@@ -18,18 +33,18 @@ public class MovieFormViewModel
     [DataMember]
     [Required]
     [Display(Name = "Release Date")]
-    public DateTime ReleaseDate { get; set; }
+    public DateTime? ReleaseDate { get; set; }
 
     [DataMember]
     [Required]
     [Display(Name = "Number In Stock")]
-    [Range(0, int.MaxValue)]
-    public int NumberInStock { get; set; }
+    [Range(1, 20, ErrorMessage = "The field Number in Stock must be between 1 and 20")]
+    public int? NumberInStock { get; set; }
 
     [DataMember]
     [Required]
     [Display(Name = "Genre")]
-    public byte GenreId { get; set; }
+    public byte? GenreId { get; set; }
 
     [DataMember]
     public IEnumerable<Genre> Genres { get; set; }
