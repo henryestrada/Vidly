@@ -64,7 +64,7 @@ public class CustomersController : ControllerBase
 
         var customer = _mapper.Map<Customer>(customerDto);
 
-        var updatedCustomer = _customerRepository.UpdateAsync(id, customer);
+        var updatedCustomer = await _customerRepository.UpdateAsync(id, customer);
 
         if (updatedCustomer == null) return NotFound();
 
@@ -75,7 +75,7 @@ public class CustomersController : ControllerBase
     [Route("{id:int}")]
     public async Task<IActionResult> DeleteCustomerAsync(int id)
     {
-        var customer = _customerRepository.DeleteAsync(id);
+        var customer = await _customerRepository.DeleteAsync(id);
 
         if (customer == null) return NotFound();
 

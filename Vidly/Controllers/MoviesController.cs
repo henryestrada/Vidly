@@ -53,7 +53,7 @@ public class MoviesController : Controller
         if (movie.Id == 0)
             await _movieRepository.AddAsync(movie);
         else
-            await _movieRepository.UpdateAsync(movie);
+            await _movieRepository.UpdateAsync(movie.Id, movie);
 
         return RedirectToAction("Index", "Movies");
     }

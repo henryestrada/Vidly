@@ -25,5 +25,11 @@ public class AutoMapperProfile : Profile
 
         CreateMap<Customer, CustomerDto>();
         CreateMap<CustomerDto, Customer>();
+
+        CreateMap<Movie, UpdateMovieRequest>();
+        CreateMap<UpdateMovieRequest, Movie>();
+
+        CreateMap<Movie, AddMovieRequest>();
+        CreateMap<AddMovieRequest, Movie>();
     }
 }

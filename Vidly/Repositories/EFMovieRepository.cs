@@ -16,6 +16,8 @@ public class EFMovieRepository : IMovieRepository
     public async Task<Movie> AddAsync(Movie movie)
     {
         movie.Id = 0;
+        movie.DateAdded = DateTime.Now;
+
         await _vidlyDbContext.AddAsync(movie);
         await _vidlyDbContext.SaveChangesAsync();
 
@@ -24,7 +26,7 @@ public class EFMovieRepository : IMovieRepository
 
     public async Task<Movie> DeleteAsync(int id)
     {
-        var movie = await _vidlyDbContext.Movies.SingleAsync(x => x.Id == id);
+        var movie = await _vidlyDbContext.Movies.SingleOrDefaultAsync(x => x.Id == id);
 
         if (movie == null) return null;
 
@@ -42,13 +44,15 @@ public class EFMovieRepository : IMovieRepository
 
     public async Task<Movie> GetAsync(int id)
     {
-        return await _vidlyDbContext.Movies.Include(x => x.Genre).FirstOrDefaultAsync(x => x.Id == id);
+        return await _vidlyDbContext.Movies.Include(x => x.Genre).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Movie> UpdateAsync(Movie movie)
+    public async Task<Movie> UpdateAsync(int id, Movie movie)
     {
 
-        var existingMovie = await _vidlyDbContext.Movies.SingleAsync(x => x.Id == movie.Id);
+        var existingMovie = await _vidlyDbContext.Movies.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (existingMovie == null) return null;
 
         existingMovie.Name = movie.Name;
         existingMovie.ReleaseDate = movie.ReleaseDate;
