@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Vidly.Models;
 using Vidly.Repositories;
 using Vidly.ViewModels;
@@ -6,6 +7,7 @@ using Vidly.ViewModels;
 namespace Vidly.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
+[Authorize]
 public class CustomersController : Controller
 {
     private readonly ICustomerRepository _customerRepository;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Data;
 using Vidly.Repositories;
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<VidlyDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Vidly"));
 });
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<VidlyDbContext>();
 
 // Add Services
 builder.Services.AddScoped<ICustomerRepository, EFCustomerRepository>();
@@ -47,10 +50,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();
