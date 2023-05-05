@@ -29,4 +29,16 @@ public class CustomerDto
     [DataMember]
     [Required(ErrorMessage = "The Membership Type field is required.")]
     public byte? MembershipTypeId { get; set; }
+
+    [DataMember]
+    public MembershipTypeDto MembershipType { get; set; }
+
+    [DataMember]
+    public string FullName
+    {
+        get
+        {
+            return $"{FirstName} {LastName}";
+        }
+    }
 }

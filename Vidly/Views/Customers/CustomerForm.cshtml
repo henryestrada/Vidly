@@ -8,7 +8,7 @@
 
 <h2>@pageTitle</h2>
 
-@using (Html.BeginForm("Save", "Customers"))
+@using (Html.BeginForm("Save", "Customers", FormMethod.Post))
 {
     <div class="mb-3">
         @Html.LabelFor(m => m.Customer.FirstName)

@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Vidly.Models;
+﻿namespace Vidly.Models;
 
 public class MembershipType
 {
     public byte Id { get; set; }
-    [Required]
-    [StringLength(25)]
     public string Name { get; set; }
     public short SignUpFee { get; set; }
     public byte DurationInMonths { get; set; }

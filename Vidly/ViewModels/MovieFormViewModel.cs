@@ -47,5 +47,5 @@ public class MovieFormViewModel
     public byte? GenreId { get; set; }
 
     [DataMember]
-    public IEnumerable<Genre> Genres { get; set; }
+    public IEnumerable<Genre>? Genres { get; set; }
 }

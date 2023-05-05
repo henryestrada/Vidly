@@ -22,8 +22,7 @@ public class MoviesController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var movies = await _movieRepository.GetAllAsync();
-        return View("Movies", movies);
+        return View("Movies");
     }
 
     public async Task<ViewResult> New()

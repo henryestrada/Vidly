@@ -11,11 +11,13 @@ namespace Vidly.Controllers.Api;
 public class CustomersController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IMembershipTypeRepository _membershipTypeRepository;
     private readonly IMapper _mapper;
 
-    public CustomersController(ICustomerRepository customerRepository, IMapper mapper)
+    public CustomersController(ICustomerRepository customerRepository, IMembershipTypeRepository membershipTypeRepository, IMapper mapper)
     {
         _customerRepository = customerRepository;
+        _membershipTypeRepository = membershipTypeRepository;
         _mapper = mapper;
     }
 

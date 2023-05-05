@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vidly.Models;
 using Vidly.Repositories;
 using Vidly.ViewModels;
 
@@ -18,9 +19,7 @@ public class CustomersController : Controller
 
     public async Task<ViewResult> Index()
     {
-        var customers = await _customerRepository.GetAllAsync();
-
-        return View("Customers", customers);
+        return View("Customers");
     }
 
     public async Task<ViewResult> New()
@@ -37,25 +36,25 @@ public class CustomersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(CustomerFormViewModel viewModel)
+    public async Task<IActionResult> Save(Customer customer)
     {
         if (!ModelState.IsValid)
         {
             var newViewModel = new CustomerFormViewModel
             {
-                Customer = viewModel.Customer,
+                Customer = customer,
                 MembershipTypes = await _membershipTypeRepository.GetAllAsync()
             };
 
             return View("CustomerForm", newViewModel);
         }
 
-        var customer = viewModel.Customer;
+        //var customer = viewModel.Customer;
 
         if (customer.Id == 0)
-            await _customerRepository.AddAsync(viewModel.Customer);
+            await _customerRepository.AddAsync(customer);
         else
-            await _customerRepository.UpdateAsync(viewModel.Customer.Id, viewModel.Customer);
+            await _customerRepository.UpdateAsync(customer.Id, customer);
 
         return RedirectToAction("Index", "Customers");
     }

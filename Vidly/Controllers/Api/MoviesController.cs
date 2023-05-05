@@ -22,7 +22,7 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetMoviesAsync()
     {
-        var moviesDto = (await _movieRepository.GetAllAsync()).Select(_mapper.Map<Movie, UpdateMovieRequest>);
+        var moviesDto = (await _movieRepository.GetAllAsync()).Select(_mapper.Map<Movie, MovieDto>);
 
         return Ok(moviesDto);
     }
@@ -35,7 +35,7 @@ public class MoviesController : ControllerBase
 
         if (movie == null) return NotFound();
 
-        var movieDto = _mapper.Map<UpdateMovieRequest>(movie);
+        var movieDto = _mapper.Map<MovieDto>(movie);
 
         return Ok(movieDto);
     }
@@ -51,14 +51,14 @@ public class MoviesController : ControllerBase
         // Pass details Repository
         var addedMovie = await _movieRepository.AddAsync(movie);
 
-        var movieDto = _mapper.Map<UpdateMovieRequest>(addedMovie);
+        var movieDto = _mapper.Map<MovieDto>(addedMovie);
 
         return CreatedAtAction(nameof(GetMovieAsync), new { id = movieDto.Id }, movieDto);
     }
 
     [HttpPut]
     [Route("{id:int}")]
-    public async Task<IActionResult> UpdateMovieAsync([FromRoute] int id, [FromBody] UpdateMovieRequest movieDto)
+    public async Task<IActionResult> UpdateMovieAsync([FromRoute] int id, [FromBody] MovieDto movieDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 

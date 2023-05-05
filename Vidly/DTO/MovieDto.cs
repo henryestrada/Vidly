@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Vidly.DTO;
 
-public class UpdateMovieRequest
+public class MovieDto
 {
     [DataMember]
     public int? Id { get; set; }
@@ -29,4 +29,7 @@ public class UpdateMovieRequest
     [DataMember]
     [Required]
     public byte? GenreId { get; set; }
+
+    [DataMember]
+    public GenreDto Genre { get; set; }
 }
