@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootbox.js@6.0.0",
+      "destination": "wwwroot/lib/bootbox.js/",
+      "files": [
+        "bootbox.min.js"
+      ]
+    },
+    {
+      "library": "datatables.net@2.1.1",
+      "destination": "wwwroot/lib/datatables.net/",
+      "files": [
+        "jquery.dataTables.min.js"
+      ]
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/",
+      "files": [
+        "js/jquery.dataTables.min.js",
+        "images/sort_asc.png",
+        "images/sort_asc_disabled.png",
+        "images/sort_both.png",
+        "images/sort_desc.png",
+        "images/sort_desc_disabled.png",
+        "css/dataTables.bootstrap.css",
+        "css/dataTables.bootstrap.min.css",
+        "css/dataTables.bootstrap4.css",
+        "css/dataTables.bootstrap4.min.css",
+        "css/dataTables.foundation.css",
+        "css/dataTables.foundation.min.css",
+        "css/dataTables.jqueryui.css",
+        "css/dataTables.jqueryui.min.css",
+        "css/dataTables.material.css",
+        "css/dataTables.material.min.css",
+        "css/dataTables.semanticui.css",
+        "css/dataTables.semanticui.min.css",
+        "css/dataTables.uikit.css",
+        "css/dataTables.uikit.min.css",
+        "css/jquery.dataTables.css",
+        "css/jquery.dataTables.min.css",
+        "css/jquery.dataTables_themeroller.css",
+        "css/jquery.dataTables_themeroller.min.css"
+      ]
+    }
+  ]
+}
