@@ -24,9 +24,12 @@ public class MoviesController : Controller
 
     public async Task<IActionResult> Index()
     {
-        return View("Movies");
+        if (User.IsInRole(RoleName.CanManageMovies))
+            return View("Movies");
+        return View("ReadOnlyMovies");
     }
 
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<ViewResult> New()
     {
         var genres = await _genreRepository.GetAllAsync();
@@ -37,6 +40,7 @@ public class MoviesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<IActionResult> Save(MovieFormViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -59,6 +63,7 @@ public class MoviesController : Controller
         return RedirectToAction("Index", "Movies");
     }
 
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<IActionResult> Edit(int id)
     {
         var movie = await _movieRepository.GetAsync(id);

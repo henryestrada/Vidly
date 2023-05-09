@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Data;
+using Vidly.Models;
 using Vidly.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,18 @@ builder.Services.AddDbContext<VidlyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Vidly"));
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<VidlyDbContext>();
+// Identity configuration
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<VidlyDbContext>();
+
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "966000524578367";
+    options.AppSecret = "2cd2b2505b8054d7b47bdeb4bbf2e796";
+});
 
 // Add Services
 builder.Services.AddScoped<ICustomerRepository, EFCustomerRepository>();

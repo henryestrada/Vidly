@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using Vidly.DTO;
 using Vidly.Models;
 using Vidly.Repositories;
@@ -8,6 +10,7 @@ namespace Vidly.Controllers.Api;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class MoviesController : ControllerBase
 {
     private readonly IMovieRepository _movieRepository;
@@ -36,11 +39,11 @@ public class MoviesController : ControllerBase
         if (movie == null) return NotFound();
 
         var movieDto = _mapper.Map<MovieDto>(movie);
-
         return Ok(movieDto);
     }
 
     [HttpPost]
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<IActionResult> CreateMovieAsync(AddMovieRequest addMovieDto)
     {
         // Validate the request
@@ -58,6 +61,7 @@ public class MoviesController : ControllerBase
 
     [HttpPut]
     [Route("{id:int}")]
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<IActionResult> UpdateMovieAsync([FromRoute] int id, [FromBody] MovieDto movieDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -73,6 +77,7 @@ public class MoviesController : ControllerBase
 
     [HttpDelete]
     [Route("{id:int}")]
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public async Task<IActionResult> DeleteMovieAsync(int id)
     {
         var movie = await _movieRepository.DeleteAsync(id);

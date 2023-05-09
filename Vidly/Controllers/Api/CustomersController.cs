@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vidly.DTO;
 using Vidly.Models;
@@ -8,6 +9,7 @@ namespace Vidly.Controllers.Api;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CustomersController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepository;

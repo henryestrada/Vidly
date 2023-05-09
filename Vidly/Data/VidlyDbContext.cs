@@ -4,7 +4,7 @@ using Vidly.Models;
 
 namespace Vidly.Data;
 
-public class VidlyDbContext : IdentityDbContext
+public class VidlyDbContext : IdentityDbContext<User>
 {
     public VidlyDbContext(DbContextOptions<VidlyDbContext> options)
         : base(options)
@@ -16,7 +16,6 @@ public class VidlyDbContext : IdentityDbContext
     public DbSet<MembershipType> MembershipTypes { get; set; }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Genre> Genres { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
