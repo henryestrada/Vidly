@@ -24,9 +24,15 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCustomersAsync()
+    public async Task<IActionResult> GetCustomersAsync(string query = null)
     {
-        var customersDto = (await _customerRepository.GetAllAsync()).Select(_mapper.Map<Customer, CustomerDto>);
+        IEnumerable<CustomerDto> customersDto;
+
+        if (query == null)
+            customersDto = (await _customerRepository.GetAllAsync()).Select(_mapper.Map<Customer, CustomerDto>);
+
+        else
+            customersDto = (await _customerRepository.GetAsync(query)).Select(_mapper.Map<Customer, CustomerDto>);
 
         return Ok(customersDto);
     }

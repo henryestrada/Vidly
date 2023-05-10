@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Data;
@@ -33,6 +34,15 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 {
     options.AppId = "966000524578367";
     options.AppSecret = "2cd2b2505b8054d7b47bdeb4bbf2e796";
+});
+
+builder.Services.AddRazorPages();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
 });
 
 // Add Services

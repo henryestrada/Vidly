@@ -45,6 +45,19 @@
         "css/jquery.dataTables_themeroller.css",
         "css/jquery.dataTables_themeroller.min.css"
       ]
+    },
+    {
+      "library": "typeahead.js@0.11.1",
+      "destination": "wwwroot/lib/typeahead.js/",
+      "files": [
+        "typeahead.bundle.min.js",
+        "bloodhound.min.js",
+        "typeahead.jquery.js"
+      ]
+    },
+    {
+      "library": "typeahead.js-bootstrap-css@1.2.1",
+      "destination": "wwwroot/lib/typeahead.js-bootstrap-css/"
     }
   ]
 }

@@ -17,6 +17,8 @@ public class VidlyDbContext : IdentityDbContext<User>
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Genre> Genres { get; set; }
 
+    public DbSet<Rental> Rentals { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Customer>()

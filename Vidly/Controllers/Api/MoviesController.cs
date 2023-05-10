@@ -23,9 +23,15 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetMoviesAsync()
+    public async Task<IActionResult> GetMoviesAsync(string query = null)
     {
-        var moviesDto = (await _movieRepository.GetAllAsync()).Select(_mapper.Map<Movie, MovieDto>);
+        IEnumerable<MovieDto> moviesDto;
+
+        if (query == null)
+            moviesDto = (await _movieRepository.GetAllAsync()).Select(_mapper.Map<Movie, MovieDto>);
+
+        else
+            moviesDto = (await _movieRepository.GetAsync(query)).Select(_mapper.Map<Movie, MovieDto>);
 
         return Ok(moviesDto);
     }

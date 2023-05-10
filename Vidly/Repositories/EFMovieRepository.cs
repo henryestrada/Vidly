@@ -47,6 +47,17 @@ public class EFMovieRepository : IMovieRepository
         return await _vidlyDbContext.Movies.Include(x => x.Genre).SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<IEnumerable<Movie>> GetAsync(List<int> movieIdCollection)
+    {
+        return await _vidlyDbContext.Movies.Where(
+            m => movieIdCollection.Contains(m.Id)).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Movie>> GetAsync(string query)
+    {
+        return await _vidlyDbContext.Movies.Include(x => x.Genre).Where(x => x.Name.Contains(query) && x.NumberAvailable > 0).ToListAsync();
+    }
+
     public async Task<Movie> UpdateAsync(int id, Movie movie)
     {
 

@@ -39,9 +39,14 @@ public class EFCustomerRepository : ICustomerRepository
         return await _vidlyDbContext.Customers.Include(c => c.MembershipType).ToListAsync();
     }
 
+    public async Task<IEnumerable<Customer>> GetAsync(string query)
+    {
+        return await _vidlyDbContext.Customers.Include(c => c.MembershipType).Where(c => c.FirstName.Contains(query) || c.LastName.Contains(query)).ToListAsync();
+    }
+
     public async Task<Customer> GetAsync(int id)
     {
-        return await _vidlyDbContext.Customers.Include(c => c.MembershipType).SingleOrDefaultAsync(x => x.Id == id);
+        return await _vidlyDbContext.Customers.Include(c => c.MembershipType).SingleAsync(x => x.Id == id);
     }
 
     public async Task<Customer> UpdateAsync(int id, Customer customer)
