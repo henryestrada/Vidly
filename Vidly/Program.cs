@@ -1,11 +1,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Miqo.EncryptedJsonConfiguration;
 using Vidly.Data;
 using Vidly.Models;
 using Vidly.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var key = Convert.FromBase64String(Environment.GetEnvironmentVariable("VIDLY_SECRET"));
+
+builder.Configuration.AddEncryptedJsonFile("appsettings.ejson", key);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -32,8 +37,8 @@ builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfi
 
 builder.Services.AddAuthentication().AddFacebook(options =>
 {
-    options.AppId = "966000524578367";
-    options.AppSecret = "2cd2b2505b8054d7b47bdeb4bbf2e796";
+    options.AppId = builder.Configuration.GetValue<string>("FacebookAuth:AppId");
+    options.AppSecret = builder.Configuration.GetValue<string>("FacebookAuth:AppSecret");
 });
 
 builder.Services.AddRazorPages();
@@ -50,6 +55,7 @@ builder.Services.AddScoped<ICustomerRepository, EFCustomerRepository>();
 builder.Services.AddScoped<IMovieRepository, EFMovieRepository>();
 builder.Services.AddScoped<IMembershipTypeRepository, EFMembershipTypeRepository>();
 builder.Services.AddScoped<IGenreRepository, EFGenreRepository>();
+builder.Services.AddScoped<IRentalRepository, EFRentalRepository>();
 
 var app = builder.Build();
 
